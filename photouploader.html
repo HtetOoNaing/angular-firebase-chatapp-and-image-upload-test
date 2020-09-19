@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Firebase Photo Uploader</title>
+	<style type="text/css" media="screen">
+		body{
+			display: flex;
+			min-height: 100vh;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+		#uploader{
+			-webkit-apperance:none;
+			apperance:none;
+			width: 50%;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+<progress value="0" max="100" id="uploader">0%</progress>
+<input type="file" value="upload" id="fileButton">
+
+
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBBltjsBosj8O-no6BDwfOBamQZRnxE8yE",
+    authDomain: "chatapp-89c55.firebaseapp.com",
+    databaseURL: "https://chatapp-89c55.firebaseio.com",
+    projectId: "chatapp-89c55",
+    storageBucket: "chatapp-89c55.appspot.com",
+    messagingSenderId: "411158074647"
+  };
+  firebase.initializeApp(config);
+
+  var uploader = document.getElementById('uploader');
+  var fileButton = document.getElementById("fileButton");
+
+  fileButton.addEventListener('change',function (e) {
+  	var file = e.target.files[0];
+  	var storageRef = firebase.storage().ref('photos/'+file.name);
+  	var task = storageRef.put(file);
+  	task.on('state_changed',
+
+  			function progress(snapshot){
+  				var percentage = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+  				uploader.value = percentage;
+  			},
+  			function error (err) {
+
+  			},
+  			function complete() {
+
+  			}
+
+  		);
+  });
+</script>
+
+</body>
+</html>
